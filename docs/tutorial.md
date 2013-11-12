@@ -195,7 +195,10 @@ submission. In order to check this, we'll need to write some custom step
 definitions. This is where the SilverStripe extension to Behat comes in
 handy, since you're already connected to the same test database in Behat
 that the browser is using. Two separate processes, but same database -
-and a clean slate on each run.
+and a clean slate on each run.  
+
+**Note:** We are assuming that this scenario is from the point of view of a website  
+author, as the user will not see the saving of the report. 
 
 At the end of our `report-abuse.feature` file, add the following:
 
