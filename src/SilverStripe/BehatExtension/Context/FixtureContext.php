@@ -432,6 +432,39 @@ class FixtureContext extends BehatContext
 		}
 	}
 
+	/**
+	* Selects a option from labelled radio option group. Uses CSS selectors for now.
+	* @Given /^I select "([^"]*)" from "([^"]*)" radio group$/
+	*/
+	public function iSelectFromRadioGroup($value, $labeltext)
+	{
+		$page = $this->getSession()->getPage();
+		$parent = NULL;
+	
+		
+		foreach ($page->findAll('css','label') as $label) {
+			if($label->getText()===$labeltext){				
+				$parent=$label->getParent();
+			}
+		}
+
+	
+		if($parent===NULL){
+			throw new \InvalidArgumentException(sprintf('Radio Button Group "%s" cannot be found', $labeltext));
+		} else{
+			foreach($parent->findAll('css', 'label') as $option){
+				if($option->getText() === $value){
+					$for = $option->getAttribute('for');
+					$radio = $parent->findById($for);
+					if(null === $radio){
+						throw new \InvalidArgumentException(sprintf('Radio Button  "%s" cannot be found', $value));
+					}
+					$this->getSession()->getDriver()->click($radio->getXPath());
+				}
+			}
+		}
+	}
+
 	protected function prepareAsset($class, $identifier, $data = null) {
 		if(!$data) $data = array();
 		$relativeTargetPath = (isset($data['Filename'])) ? $data['Filename'] : $identifier;
