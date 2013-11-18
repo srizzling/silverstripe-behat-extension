@@ -106,10 +106,23 @@ class LoginContext extends BehatContext
      * @Given /^I am not logged in$/
      */
     public function stepIAmNotLoggedIn()
-    {
+    {  
         $this->getSession()->reset();
     }
 
+      /**
+     * @Given /^I am not logged in the CMS$/
+     */
+    public function stepIAmNotLoggedInCMS()
+    {  
+        $c = $this->getMainContext();
+        $logout=$c->joinUrlParts($c->getBaseUrl(), '/Security/Logout');
+        $this->getSession()->visit($logout);
+    }
+
+
+
+  
     /**
      * @When /^I log in with "(?<username>[^"]*)" and "(?<password>[^"]*)"$/
      */
@@ -147,6 +160,17 @@ class LoginContext extends BehatContext
 
         $loginForm = $page->find('css', '#MemberLoginForm_LoginForm');
         assertNotNull($loginForm, 'I should see a log-in form');
+    }
+
+    /**
+    *@Given /^I should not see a log-in form$/
+    */
+    public function stepIShouldNotSeeALogInForm()
+    {
+        $page = $this->getSession()->getPage();
+
+        $loginForm = $page->find('css', '#MemberLoginForm_LoginForm');
+        assertNull($loginForm, 'I should not see a log-in form');
     }
 
     /**

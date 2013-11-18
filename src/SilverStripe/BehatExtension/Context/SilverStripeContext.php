@@ -53,6 +53,7 @@ class SilverStripeContext extends MinkContext implements SilverStripeAwareContex
      */
     protected $loginUrl;
 
+
     /**
      * @var String Relative path to a writeable folder where screenshots can be stored.
      * If set to NULL, no screenshots will be stored.
