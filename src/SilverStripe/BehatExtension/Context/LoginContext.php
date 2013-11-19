@@ -103,6 +103,43 @@ class LoginContext extends BehatContext
     }
 
     /**
+     * 
+     * 
+     * @Given /^I have the user "([^"]*)"$/
+     */
+    function iregisterNewUser($permCode)
+    {
+        if (!isset($this->cache_generatedMembers[$permCode])) {
+            $group = \Injector::inst()->create('Group');
+            $group->Title = "$permCode";
+            $group->write();
+
+            $permission = \Injector::inst()->create('Permission');
+            $permission->Code = $permCode;
+            $permission->write();
+            $group->Permissions()->add($permission);
+
+            $member = \DataObject::get_one('Member', sprintf('"Email" = \'%s\'', "$permCode@example.org"));
+            if (!$member) {
+                $member = \Injector::inst()->create('Member');
+            }
+
+            $member->FirstName = $permCode;
+            $member->Surname = "User";
+            $member->Email = "$permCode@example.org";
+            $member->changePassword('secret');
+            $member->write();
+            $group->Members()->add($member);
+
+            $this->cache_generatedMembers[$permCode] = $member;
+        }
+
+
+       
+    }
+
+
+    /**
      * @Given /^I am not logged in$/
      */
     public function stepIAmNotLoggedIn()

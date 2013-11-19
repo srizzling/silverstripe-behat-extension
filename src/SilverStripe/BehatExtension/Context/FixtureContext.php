@@ -101,6 +101,8 @@ class FixtureContext extends BehatContext
 		\SapphireTest::empty_temp_db();
 	}
 
+
+
 	/**
 	 * @AfterScenario
 	 */
@@ -216,6 +218,23 @@ class FixtureContext extends BehatContext
 				));
 		}
 	}
+
+	/**
+     * @Then /^pages should be editable by "([^"]*)"$/
+     */
+    public function pagesShouldBeEditableBy($member)
+    {
+    	
+    	$edit = '"/admin/"';
+    	return array(
+    		new Step\Given('I am not logged in the CMS'),
+    		new Step\Given('I log in with "'.$member.'@example.org" and "secret"'),
+    		new Step\Given('I go to '.$edit),
+    		new Step\Then('I should not see "Forbidden"'),
+    		new Step\Then('I wait 10 seconds'),
+    		new Step\Then('I am on the homepage')
+    		);
+    }
 
   
 	 /**
