@@ -230,7 +230,6 @@ class FixtureContext extends BehatContext
     		new Step\Given('I am not logged in the CMS'),
     		new Step\Given('I log in with "'.$member.'@example.org" and "secret"'),
     		new Step\Given('I go to '.$edit),
-    		new Step\Given('I wait 20 seconds'),
     		new Step\Given('I should see an edit page form'),
     		new Step\Then('I am on the homepage')
     		);
@@ -247,7 +246,6 @@ class FixtureContext extends BehatContext
     		new Step\Given('I am not logged in the CMS'),
     		new Step\Given('I log in with "'.$member.'@example.org" and "secret"'),
     		new Step\Given('I go to '.$edit),
-    		new Step\Given('I wait 20 seconds'),
     		new Step\Given('I should not see an edit page form'),
     		new Step\Then('I am on the homepage')
     		);
