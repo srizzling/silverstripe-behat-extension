@@ -225,13 +225,30 @@ class FixtureContext extends BehatContext
     public function pagesShouldBeEditableBy($member)
     {
     	
-    	$edit = '"/admin/"';
+    	$edit = '"/admin/pages/edit"';
     	return array(
     		new Step\Given('I am not logged in the CMS'),
     		new Step\Given('I log in with "'.$member.'@example.org" and "secret"'),
     		new Step\Given('I go to '.$edit),
-    		new Step\Then('I should not see "Forbidden"'),
-    		new Step\Then('I wait 10 seconds'),
+    		new Step\Given('I wait 20 seconds'),
+    		new Step\Given('I should see an edit page form'),
+    		new Step\Then('I am on the homepage')
+    		);
+    }
+
+    	/**
+     * @Then /^pages should not be editable by "([^"]*)"$/
+     */
+    public function pagesShouldBeNotEditableBy($member)
+    {
+    	
+    	$edit = '"/admin/pages/edit"';
+    	return array(
+    		new Step\Given('I am not logged in the CMS'),
+    		new Step\Given('I log in with "'.$member.'@example.org" and "secret"'),
+    		new Step\Given('I go to '.$edit),
+    		new Step\Given('I wait 20 seconds'),
+    		new Step\Given('I should not see an edit page form'),
     		new Step\Then('I am on the homepage')
     		);
     }
@@ -310,7 +327,7 @@ class FixtureContext extends BehatContext
 	}
 
 	/**
-	 * Example: Given a "member" "Admin" belonging to "Admin Group" with "Email"="test@test.com"
+ * Example: Given a "member" "Admin" belonging to "Admin Group" with "Email"="test@test.com"
 	 * 
 	 * @Given /^(?:(an|a|the) )"member" "(?<id>[^"]+)" belonging to "(?<groupId>[^"]+)" with (?<data>.*)$/
 	 */

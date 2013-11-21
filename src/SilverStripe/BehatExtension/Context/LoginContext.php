@@ -72,9 +72,27 @@ class LoginContext extends BehatContext
      * @Given /^I am logged in with "([^"]*)" permissions$/
      */
     function iAmLoggedInWithPermissions($permCode)
+    {        
+        return array(
+            new Step\Given('I am not logged in the CMS'),
+            new Step\Given(sprintf('I have the user "%s"', "$permCode")),
+            new Step\Given(sprintf('I log in with "%s" and "%s"', "$permCode@example.org", 'secret')),
+            );
+    }
+
+
+    /**
+     * 
+     * 
+     * @Given /^I have the user "([^"]*)"$/
+     */
+    function iregisterNewUser($permCode)
     {
         if (!isset($this->cache_generatedMembers[$permCode])) {
-            $group = \Injector::inst()->create('Group');
+            $group = \DataObject::get_one('Group', sprintf('"Title" = \'%s\'', "$permCode group"));
+            if (!$group) {
+                $group = \Injector::inst()->create('Group');
+            }
             $group->Title = "$permCode group";
             $group->write();
 
@@ -96,46 +114,7 @@ class LoginContext extends BehatContext
             $group->Members()->add($member);
 
             $this->cache_generatedMembers[$permCode] = $member;
-        }
-
-//        $this->cache_generatedMembers[$permCode]->logIn();
-        return new Step\Given(sprintf('I log in with "%s" and "%s"', "$permCode@example.org", 'secret'));
-    }
-
-    /**
-     * 
-     * 
-     * @Given /^I have the user "([^"]*)"$/
-     */
-    function iregisterNewUser($permCode)
-    {
-        if (!isset($this->cache_generatedMembers[$permCode])) {
-            $group = \Injector::inst()->create('Group');
-            $group->Title = "$permCode";
-            $group->write();
-
-            $permission = \Injector::inst()->create('Permission');
-            $permission->Code = $permCode;
-            $permission->write();
-            $group->Permissions()->add($permission);
-
-            $member = \DataObject::get_one('Member', sprintf('"Email" = \'%s\'', "$permCode@example.org"));
-            if (!$member) {
-                $member = \Injector::inst()->create('Member');
-            }
-
-            $member->FirstName = $permCode;
-            $member->Surname = "User";
-            $member->Email = "$permCode@example.org";
-            $member->changePassword('secret');
-            $member->write();
-            $group->Members()->add($member);
-
-            $this->cache_generatedMembers[$permCode] = $member;
-        }
-
-
-       
+        }       
     }
 
 
