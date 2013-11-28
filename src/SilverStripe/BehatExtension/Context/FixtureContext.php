@@ -101,8 +101,6 @@ class FixtureContext extends BehatContext
 		\SapphireTest::empty_temp_db();
 	}
 
-
-
 	/**
 	 * @AfterScenario
 	 */
@@ -220,39 +218,28 @@ class FixtureContext extends BehatContext
 	}
 
 	/**
-     * @Then /^pages should be editable by "([^"]*)"$/
+	 * Checks wheather a member has the ability to edit certain posts.
+	 * Also checks the negative as well. 
+	 *  
+	 * Example: Then pages should be editable by "Admin" 
+	 * Then pages should not be editable by "Admin"
+	 * 
+     * @Then /^pages should( not? |\s*)be editable by "([^"]*)"$/
      */
-    public function pagesShouldBeEditableBy($member)
-    {
-    	
+    public function pagesShouldBeEditableBy($negative, $member)
+    {       	
     	$edit = '"/admin/pages/edit"';
+    	$editable = 'I should'.$negative.'see an edit page form';
     	return array(
     		new Step\Given('I am not logged in the CMS'),
     		new Step\Given('I log in with "'.$member.'@example.org" and "secret"'),
     		new Step\Given('I go to '.$edit),
-    		new Step\Given('I should see an edit page form'),
+    		new Step\Given($editable),
     		new Step\Then('I am on the homepage')
     		);
     }
 
-    	/**
-     * @Then /^pages should not be editable by "([^"]*)"$/
-     */
-    public function pagesShouldBeNotEditableBy($member)
-    {
-    	
-    	$edit = '"/admin/pages/edit"';
-    	return array(
-    		new Step\Given('I am not logged in the CMS'),
-    		new Step\Given('I log in with "'.$member.'@example.org" and "secret"'),
-    		new Step\Given('I go to '.$edit),
-    		new Step\Given('I should not see an edit page form'),
-    		new Step\Then('I am on the homepage')
-    		);
-    }
-
-  
-	 /**
+    /**
 	 * Example: Given the "page" "Page 1" is not published 
 	 * 
 	 * @Given /^(?:(an|a|the) )"(?<type>[^"]+)" "(?<id>[^"]+)" is (?<state>[^"]*)$/
@@ -325,7 +312,7 @@ class FixtureContext extends BehatContext
 	}
 
 	/**
- * Example: Given a "member" "Admin" belonging to "Admin Group" with "Email"="test@test.com"
+ 	 * Example: Given a "member" "Admin" belonging to "Admin Group" with "Email"="test@test.com"
 	 * 
 	 * @Given /^(?:(an|a|the) )"member" "(?<id>[^"]+)" belonging to "(?<groupId>[^"]+)" with (?<data>.*)$/
 	 */
@@ -438,6 +425,10 @@ class FixtureContext extends BehatContext
 	}
 
 	/**
+	 * Creates or changes the created or last edited date of a page. 
+	 * 
+	 * Example: Given the "page" "Home" was last edited "7 days ago"
+	 * 
 	 * @Given /^(?:(an|a|the) )"(?<type>[^"]*)" "(?<id>[^"]*)" was (?<mod>(created|last edited)) "(?<time>[^"]*)"$/
 	 */
 	public function aRecordWasLastEditedRelative($type, $id, $mod, $time) {
@@ -465,12 +456,6 @@ class FixtureContext extends BehatContext
 			)); 
 		}
 	}
-
-	
-
-	
-
-
 
 	protected function prepareAsset($class, $identifier, $data = null) {
 		if(!$data) $data = array();
