@@ -49,6 +49,8 @@ class LoginContext extends BehatContext
     }
 
     /**
+     * This step will login in the user with username as "admin"
+     * 
      * @Given /^I am logged in$/
      */
     public function stepIAmLoggedIn()
@@ -82,7 +84,8 @@ class LoginContext extends BehatContext
 
 
     /**
-     * 
+     * This will register the user without logging in. Use 
+     * I am logged in with "ADMIN" permissions to log in. 
      * 
      * @Given /^I have the user "([^"]*)"$/
      */
@@ -119,14 +122,19 @@ class LoginContext extends BehatContext
 
 
     /**
+     * Restarts the broswer to emulate logging out.     *
+     * 
      * @Given /^I am not logged in$/
      */
     public function stepIAmNotLoggedIn()
     {  
-        $this->getSession()->reset();
+        $this->getSession()->restart();
     }
 
-      /**
+    /**
+     * Will direct the user to the CMS logout link, to
+     * logout the user without restart the browser
+     * 
      * @Given /^I am not logged in the CMS$/
      */
     public function stepIAmNotLoggedInCMS()
@@ -135,11 +143,10 @@ class LoginContext extends BehatContext
         $logout=$c->joinUrlParts($c->getBaseUrl(), '/Security/Logout');
         $this->getSession()->visit($logout);
     }
-
-
-
   
     /**
+     * This will log in the user with the password given
+     * 
      * @When /^I log in with "(?<username>[^"]*)" and "(?<password>[^"]*)"$/
      */
     public function stepILogInWith($email, $password)
@@ -168,26 +175,25 @@ class LoginContext extends BehatContext
     }
 
     /**
-     * @Given /^I should see a log-in form$/
+     * Checks wheather the current page has a login form. Can
+     * also check if it doesn't exist as well.
+     *
+     * Example: Given I should not see a login form
+     * 
+     * @Given /^I should( not? |\s*)see a log-in form$/
      */
-    public function stepIShouldSeeALogInForm()
+    public function stepIShouldSeeALogInForm($negative)
     {
         $page = $this->getSession()->getPage();
-
-        $loginForm = $page->find('css', '#MemberLoginForm_LoginForm');
-        assertNotNull($loginForm, 'I should see a log-in form');
+        $loginForm = $page->find('css', '#MemberLoginForm_LoginForm');        
+        if(preg_match('/not/',$negative)) {
+            assertNull($loginForm, 'I should not see a log-in form');
+        }
+        else{
+             assertNotNull($loginForm, 'I should see a log-in form');
+        }
     }
 
-    /**
-    *@Given /^I should not see a log-in form$/
-    */
-    public function stepIShouldNotSeeALogInForm()
-    {
-        $page = $this->getSession()->getPage();
-
-        $loginForm = $page->find('css', '#MemberLoginForm_LoginForm');
-        assertNull($loginForm, 'I should not see a log-in form');
-    }
 
     /**
      * @Then /^I will see a bad log-in message$/
@@ -195,9 +201,7 @@ class LoginContext extends BehatContext
     public function stepIWillSeeABadLogInMessage()
     {
         $page = $this->getSession()->getPage();
-
         $badMessage = $page->find('css', '.message.bad');
-
         assertNotNull($badMessage, 'Bad message not found.');
     }
 
