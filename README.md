@@ -129,7 +129,7 @@ Example: behat.yml
 	    class: SilverStripe\MyModule\Test\Behaviour\FeatureContext
 	  extensions:
 	    SilverStripe\BehatExtension\Extension:
-	      screenshot_path: %behat.paths.base%/artifacts/screenshots
+	      screenshot_path: %paths.base%/artifacts/screenshots
 	    SilverStripe\BehatExtension\MinkExtension:
 	      # Adjust this to your local environment
 	      base_url:  http://localhost/

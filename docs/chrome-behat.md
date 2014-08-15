@@ -14,7 +14,7 @@ If you would like to run Behat Tests using Google Chrome here are a few steps I 
       selenium2:
         browser: chrome
     SilverStripe\BehatExtension\Extension:
-      screenshot_path: %behat.paths.base%/_artifacts/screenshots
+      screenshot_path: %paths.base%/_artifacts/screenshots
 ```
 
 4) Now we need to use the new webdriver with Selenium. 
