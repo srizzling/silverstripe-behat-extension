@@ -5,7 +5,12 @@ namespace SilverStripe\BehatExtension;
 use Symfony\Component\Config\FileLocator,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\Loader\YamlFileLoader,
+    Symfony\Component\DependencyInjection\Definition,
+    Symfony\Component\DependencyInjection\Reference,
+    Behat\Behat\Gherkin\ServiceContainer\GherkinExtension,
+    Behat\Testwork\Specification\ServiceContainer\SpecificationExtension,
     Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+
 
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
@@ -63,9 +68,19 @@ class Extension implements ExtensionInterface
             DIRECTORY_SEPARATOR,
             ltrim($config['framework_path'], DIRECTORY_SEPARATOR)
         ));
+
         if (!file_exists($config['framework_path']) || !is_dir($config['framework_path'])) {
             throw new \InvalidArgumentException('Path specified as `framework_path` either doesn\'t exist or is not a directory');
         }
+
+        $definition = new Definition('SilverStripe\BehatExtension\Specification\ModuleContextClassLocator', 
+            array(new Definition('Behat\Behat\Gherkin\Specification\Locator\FilesystemFeatureLocator', array( 
+                new Reference(GherkinExtension::MANAGER_ID),
+                '%paths.base%'
+            ))
+        ));
+        $definition->addTag(SpecificationExtension::LOCATOR_TAG, array('priority' => 100));
+        $container->setDefinition('silverstripe_extension.specification_locator.bundle_feature', $definition);
 
         $container->setParameter('behat.silverstripe_extension.framework_path', $config['framework_path']);
         $container->setParameter('behat.silverstripe_extension.admin_url', $config['admin_url']);

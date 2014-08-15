@@ -25,7 +25,7 @@ require_once 'vendor/autoload.php';
  *
  * Generic context wrapper used as a base for Behat FeatureContext.
  */
-class SilverStripeContext extends MinkContext implements SilverStripeAwareContextInterface
+class SilverStripeContext extends SnippetAwareContext implements SilverStripeAwareContextInterface
 {
 	protected $databaseName;
 
